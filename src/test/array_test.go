@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -48,4 +49,31 @@ func TestStringSlice(*testing.T) {
 
 	fmt.Println(rune(bytes[0]))
 	fmt.Println('a')
+}
+
+func TestSliceType(t *testing.T) {
+	ar := [3]int{1, 2, 3}
+	sl := []int{1, 2, 3}
+
+	fmt.Println(reflect.TypeOf(ar))
+	fmt.Println(reflect.TypeOf(sl))
+}
+
+func TestAppend(t *testing.T) {
+	slice := []int{1}
+
+	a1 := append(slice, 2)
+	fmt.Println(slice)
+	fmt.Println(a1)
+
+	a2 := append(slice, 3)
+	fmt.Println(slice)
+	fmt.Println(a2)
+	fmt.Println(a1)
+
+	fmt.Println(&slice[0])
+	fmt.Println(&a1[0])
+	fmt.Println(&a2[0])
+
+	fmt.Printf("%d", reflect.TypeOf(&slice[0]))
 }
