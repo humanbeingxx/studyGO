@@ -2,8 +2,8 @@ package test
 
 import (
 	"fmt"
+	"studyGO/src/tools/excel"
 	"testing"
-	"tools/excel"
 )
 
 func TestExcelParser(t *testing.T) {
