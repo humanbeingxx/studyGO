@@ -77,3 +77,28 @@ func TestAppend(t *testing.T) {
 
 	fmt.Printf("%d", reflect.TypeOf(&slice[0]))
 }
+
+func TestResize(t *testing.T) {
+	origin := make([]int, 2, 3)
+	sli1 := origin[0:2]
+	sli2 := origin[0:2]
+	fmt.Printf("%p -- %p -- %p\n", origin, sli1, sli2)
+	origin = append(origin, 3)
+	fmt.Printf("%p -- %p -- %p\n", origin, sli1, sli2)
+
+	origin[0] = 99
+
+	fmt.Println(origin)
+	fmt.Println(sli1)
+	fmt.Println(sli2)
+}
+
+func TestConstraintCap(t *testing.T) {
+	origin := [5]int{1, 2, 3, 4, 5}
+	sli := origin[0:1:2]
+	fmt.Printf("%p -- %p\n", &origin, &sli[0])
+
+	sli = append(sli, 4)
+	sli = append(sli, 5)
+	fmt.Printf("%p -- %p\n", &origin, &sli[0])
+}
