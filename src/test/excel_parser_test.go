@@ -7,7 +7,7 @@ import (
 )
 
 func TestExcelParser(t *testing.T) {
-	excel := excel.Parse("/tmp/test.xlsx")
+	excel := excel.Parse("/tmp/cxs/test.xlsx")
 
 	fmt.Println(excel.Header)
 	fmt.Println(excel.Content)

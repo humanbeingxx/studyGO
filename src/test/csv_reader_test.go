@@ -7,6 +7,6 @@ import (
 )
 
 func Test(t *testing.T) {
-	csvData := csv.Read("/Users/cxs/temp/test.csv")
+	csvData := csv.Read("/tmp/cxs/test.csv")
 	fmt.Println(csvData)
 }
