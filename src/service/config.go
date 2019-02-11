@@ -14,7 +14,7 @@ type Config struct {
 }
 
 func open() *sql.DB {
-	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/go?charset=utf8&parseTime=true")
+	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/go?charset=utf8mb4&parseTime=true")
 	if err != nil {
 		fmt.Println(err)
 		panic("DB INITIALIZE FAILED !!!")
@@ -58,18 +58,20 @@ func GetConfig(name string) string {
 	return value
 }
 
-func AddConfig(name string, value string) bool {
+func AddConfig(name string, value string) int {
 	db := open()
 	defer db.Close()
-	stmt, _ := db.Prepare(`insert into tb_config (name,value) values (?,?)`)
-	ret, err := stmt.Exec(name, value)
+	stmt, _ := db.Prepare(`insert into tb_config (name,value) values (?,?) on duplicate key update value = ?`)
+	ret, err := stmt.Exec(name, value, value)
 	if err != nil {
 		fmt.Println(err)
-		return false
+		return -1
 	}
-	if affected, err := ret.RowsAffected(); err != nil || affected != 1 {
-		fmt.Println(ret.RowsAffected())
-		return false
+	if affected, err := ret.RowsAffected(); err == nil {
+		return int(affected)
+		// result := *((*int)(unsafe.Pointer(&affected)))
+		// return result
 	}
-	return true
+	fmt.Println(ret.RowsAffected())
+	return -1
 }

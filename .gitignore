@@ -9,6 +9,12 @@ bin/
 # Test binary, build with `go test -c`
 *.test
 
+# Go dep
+
+vendor/
+Gopkg.lock
+Gopkg.toml
+
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
@@ -17,3 +23,9 @@ bin/
 *.iws
 *.iml
 *.ipr
+
+### mac
+.DS_Store
+
+### vscode
+.vscode

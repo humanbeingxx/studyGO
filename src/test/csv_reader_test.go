@@ -2,8 +2,8 @@ package test
 
 import (
 	"fmt"
+	"studyGO/src/tools/csv"
 	"testing"
-	"tools/csv"
 )
 
 func Test(t *testing.T) {

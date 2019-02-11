@@ -2,22 +2,40 @@ package test
 
 import (
 	"fmt"
-	"service"
+	"math/rand"
+	"strconv"
+	service "studyGO/src/service"
 	"testing"
+	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
+
+func TestRandInt(t *testing.T) {
+	ran := rand.Intn(100)
+	fmt.Println(ran)
+}
+
+func TestNow(t *testing.T) {
+	now := time.Now()
+	fmt.Println(now.Unix())
+}
 
 func TestReadConfig(t *testing.T) {
 	configs := service.ReadConfig()
 	fmt.Print(configs)
 }
+
 func TestAddConfig(t *testing.T) {
-	success := service.AddConfig("test_confi1", "test_confi2")
+	name := "test_config" + strconv.FormatInt(time.Now().Unix(), 10)
+
+	firstInsert := service.AddConfig(name, "test_value1")
+	secondInsert := service.AddConfig(name, "test_value2")
 
 	// Only pass t into top-level Convey calls
 	Convey("test add config should succeed", t, func() {
-		So(success, ShouldEqual, true)
+		So(firstInsert, ShouldEqual, 1)
+		So(secondInsert, ShouldEqual, 2)
 	})
 }
 
