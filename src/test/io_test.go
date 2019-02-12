@@ -1,6 +1,7 @@
 package test
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"net/http"
@@ -15,4 +16,11 @@ func TestCopy(t *testing.T) {
 		return
 	}
 	io.Copy(os.Stdout, resp.Body)
+}
+
+func TestBuffer(t *testing.T) {
+	var buffer bytes.Buffer
+	buffer.Write([]byte("test for buffer\n"))
+	writer := io.MultiWriter(os.Stdout, os.Stdout)
+	io.Copy(writer, &buffer)
 }

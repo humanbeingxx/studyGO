@@ -5,6 +5,8 @@ import (
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/smartystreets/goconvey/convey"
 )
 
 func TestSleep(t *testing.T) {
@@ -71,4 +73,75 @@ func TestWait(t *testing.T) {
 	for value := range results {
 		fmt.Println(*value)
 	}
+
+}
+
+func TestNoBufferChannel(t *testing.T) {
+	noBufferChan := make(chan int)
+
+	sent := false
+
+	var wg sync.WaitGroup
+
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+
+		noBufferChan <- 1
+		sent = true
+	}()
+
+	go func() {
+		defer wg.Done()
+
+		convey.Convey("before receive", t, func() {
+			convey.So(sent, convey.ShouldNotEqual, true)
+		})
+		value := <-noBufferChan
+		fmt.Printf("received %d\n", value)
+
+		time.Sleep(100 * time.Millisecond)
+
+		convey.Convey("after receive", t, func() {
+			convey.So(sent, convey.ShouldEqual, true)
+		})
+	}()
+
+	wg.Wait()
+}
+
+func TestBufferChannel(t *testing.T) {
+	bufferChan := make(chan int, 3)
+
+	var wg sync.WaitGroup
+	sent := false
+
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+
+		bufferChan <- 1
+		bufferChan <- 2
+		bufferChan <- 3
+		sent = true
+		close(bufferChan)
+	}()
+
+	time.Sleep(100 * time.Millisecond)
+
+	go func() {
+		defer wg.Done()
+
+		convey.Convey("after receive", t, func() {
+			convey.So(sent, convey.ShouldEqual, true)
+		})
+
+		for value, ok := <-bufferChan; ok; value, ok = <-bufferChan {
+			fmt.Printf("received %d\n", value)
+		}
+	}()
+
+	wg.Wait()
 }

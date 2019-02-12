@@ -1,6 +1,7 @@
 package test
 
 import (
+	"bytes"
 	"fmt"
 	"testing"
 )
@@ -63,4 +64,16 @@ func printInnerDataPointerByReference(wrap *DataWrap) {
 	fmt.Printf("%p\n", &wrap)
 	fmt.Printf("%p\n", &wrap.Data)
 	wrap.Data = "ModifiedByReference"
+}
+
+type BufferCollector interface {
+	collect() string
+}
+
+type myBuffer struct {
+	buffer bytes.Buffer
+}
+
+func (b *myBuffer) collect() string {
+	return b.buffer.String()
 }
