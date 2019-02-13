@@ -145,3 +145,48 @@ func TestBufferChannel(t *testing.T) {
 
 	wg.Wait()
 }
+
+func TestForSelect(t *testing.T) {
+	var loopChan chan int
+	for {
+		select {
+		case i := <-loopChan:
+			fmt.Println(i)
+			loopChan <- 1
+		}
+	}
+}
+
+func TestOnlySelect(t *testing.T) {
+	select {}
+}
+
+type myChan struct {
+	ch chan int
+}
+
+func (mychan *myChan) getChan() <-chan int {
+	return mychan.ch
+}
+
+func (mychan *myChan) start() {
+	for index := 0; index < 10; index++ {
+		mychan.ch <- index
+		time.Sleep(500 * time.Millisecond)
+	}
+	close(mychan.ch)
+}
+
+func TestMyChan(t *testing.T) {
+	mychan := myChan{
+		ch: make(chan int, 10),
+	}
+
+	go mychan.start()
+
+	ch := mychan.getChan()
+
+	for data, ok := <-ch; ok; data, ok = <-ch {
+		fmt.Println(data)
+	}
+}

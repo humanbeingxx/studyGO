@@ -35,7 +35,7 @@ func TestRunner(t *testing.T) {
 		case runner.ErrTimeout:
 			fmt.Println("Oh, timeout")
 			return
-		// ctrl + c
+		// ctrl + c,只支持在启动task时响应中断，启动后的任务无法中断
 		case runner.ErrInterrupt:
 			fmt.Println("Oh, interrupted")
 			return
@@ -43,5 +43,6 @@ func TestRunner(t *testing.T) {
 	}
 
 	time.Sleep(3 * time.Second)
+
 	fmt.Println("work complete")
 }
